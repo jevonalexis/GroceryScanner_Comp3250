@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">BarcodeScanner Admin</string>
+    <string name="title_activity_add_item">AddItem</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+    <string-array name="units">
+
+        <item name="kilograms">kg</item>
+        <item name="grams">g</item>
+        <item name="pounds">lb</item>
+        <item name="litres">L</item>
+        <item name="millilitres">ml</item>
+        <item name="fluid_ounces">fl.oz</item>
+        <item name="ounces">oz</item>
+        <item name="NA">N/A</item>
+    </string-array>
+    <string name="title_activity_view_items">ViewItems</string>
+</resources>
