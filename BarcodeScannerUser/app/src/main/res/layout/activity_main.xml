@@ -21,14 +21,15 @@
         android:layout_below="@+id/btn_scan"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-    />
+        android:paddingLeft="20dp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_code"
         android:id="@+id/leftLayout"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="50dp">
 
         <TextView
             android:layout_width="100dp"
@@ -60,27 +61,28 @@
         android:id="@+id/rightLayout"
         android:layout_below="@+id/tv_code"
         android:layout_toRightOf="@+id/leftLayout"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="50dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:id="@+id/item_name"
-            android:hint="Name of item"
+            android:hint="Name"
         />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:id="@+id/item_price"
-            android:text="Price of item"
+            android:text="$$"
         />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:id="@+id/item_description"
-            android:text="Description of item"
+            android:text="Description"
         />
 
     </LinearLayout>
