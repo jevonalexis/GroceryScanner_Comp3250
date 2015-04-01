@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,9 +32,15 @@ import org.json.JSONObject;
 
 
 public class Main extends ActionBarActivity {
+<<<<<<< HEAD
     RippleButton scan;
     TextView item_code,item_desc,item_price,item_name;
     Toolbar toolbar;
+=======
+    Button scan;
+    TextView code;
+    LinearLayout left, right;
+>>>>>>> 1bb2392ce948a16786bf883e644cb54f1219364b
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,17 @@ public class Main extends ActionBarActivity {
         item_price = (TextView)findViewById(R.id.item_price);
         item_desc = (TextView)findViewById(R.id.item_description);
 
+<<<<<<< HEAD
+=======
+        scan = (Button)findViewById(R.id.btn_scan);
+        code = (TextView)findViewById(R.id.tv_code);
+
+        left = (LinearLayout)findViewById(R.id.leftLayout);
+        right = (LinearLayout)findViewById(R.id.rightLayout);
+
+        left.setVisibility(View.GONE);
+        right.setVisibility(View.GONE);
+>>>>>>> 1bb2392ce948a16786bf883e644cb54f1219364b
     }
 
 

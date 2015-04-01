@@ -11,6 +11,7 @@
         layout="@layout/app_bar" />
     <RelativeLayout
         android:layout_width="match_parent"
+<<<<<<< HEAD
         android:layout_height="wrap_content"
         android:layout_below="@+id/app_bar"
         android:padding="7dp">
@@ -22,6 +23,71 @@
             android:text="Scan Product"
             android:textSize="18sp"
             android:id="@+id/btn_scan"
+=======
+        android:layout_height="50dp"
+        android:text="@string/scan"
+        android:id="@+id/btn_scan"
+        android:onClick="scanBarcode"
+    />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_code"
+        android:text="Barcode"
+        android:layout_below="@+id/btn_scan"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingLeft="20dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_code"
+        android:id="@+id/leftLayout"
+        android:orientation="vertical"
+        android:paddingTop="50dp">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/item_name_text"
+            android:text="Item Name:"
+        />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/item_price_text"
+            android:text="Price:"
+        />
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="50dp"
+            android:id="@+id/item_description_text"
+            android:text="Description:"
+        />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/rightLayout"
+        android:layout_below="@+id/tv_code"
+        android:layout_toRightOf="@+id/leftLayout"
+        android:orientation="vertical"
+        android:paddingTop="50dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:id="@+id/item_name"
+            android:hint="Name"
+        />
+>>>>>>> 1bb2392ce948a16786bf883e644cb54f1219364b
 
             app:buttonColor="@color/primaryColorDark"
             app:rippleColor="@color/primaryColor"
@@ -35,6 +101,7 @@
         <LinearLayout
             android:id="@+id/leftLayout"
             android:layout_width="wrap_content"
+<<<<<<< HEAD
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_scan"
             android:orientation="vertical">
@@ -43,6 +110,12 @@
                 android:id="@+id/tv_code"
                 android:layout_width="100dp"
                 android:layout_height="50dp"
+=======
+            android:layout_height="50dp"
+            android:id="@+id/item_price"
+            android:text="$$"
+        />
+>>>>>>> 1bb2392ce948a16786bf883e644cb54f1219364b
 
 
                 android:text="Barcode" />
@@ -71,6 +144,7 @@
         <LinearLayout
             android:id="@+id/rightLayout"
             android:layout_width="wrap_content"
+<<<<<<< HEAD
             android:layout_height="wrap_content"
             android:layout_below="@+id/btn_scan"
             android:layout_toRightOf="@+id/leftLayout"
@@ -92,6 +166,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:text="Price of item" />
+=======
+            android:layout_height="50dp"
+            android:id="@+id/item_description"
+            android:text="Description"
+        />
+>>>>>>> 1bb2392ce948a16786bf883e644cb54f1219364b
 
             <TextView
                 android:id="@+id/item_description"
