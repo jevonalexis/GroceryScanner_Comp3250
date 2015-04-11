@@ -1,0 +1,134 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="0dp"
+    android:paddingRight="0dp"
+    android:paddingTop="0dp"
+    android:paddingBottom="0dp"
+    tools:context="com.example.dillon.barcodescanneruser.Result">
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
+
+    <!--<com.xgc1986.ripplebutton.widget.RippleButton-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="60dp"-->
+        <!--android:text="Scan Product"-->
+        <!--android:textSize="18dp"-->
+        <!--android:id="@+id/btn_scan"-->
+        <!--app:buttonColor="@color/primaryColorDark"-->
+        <!--app:rippleColor="@color/primaryColor"-->
+        <!--android:textColor="@color/white"-->
+        <!--android:layout_below="@+id/app_bar"-->
+        <!--android:layout_alignParentLeft="true"-->
+        <!--android:layout_alignParentStart="true" />-->
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:id="@+id/lin_code"
+        android:orientation="horizontal"
+        android:layout_below="@+id/app_bar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="16dp"
+        android:layout_marginTop="0dp">
+
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="match_parent"
+            android:text="Barcode:"
+            android:id="@+id/text_code"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:gravity="start|center_vertical" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/code"
+            android:textSize="18dp"
+            android:gravity="left|center_vertical" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:id="@+id/lin_name"
+        android:orientation="horizontal"
+        android:layout_below="@id/lin_code"
+        android:layout_margin="16dp"
+        android:layout_marginTop="0dp">
+
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="match_parent"
+            android:text="Name:"
+            android:id="@+id/text_name"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:gravity="start|center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/name"
+            android:textSize="18dp"
+            android:gravity="left|center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:id="@+id/lin_price"
+        android:orientation="horizontal"
+        android:layout_below="@id/lin_name"
+        android:layout_margin="16dp"
+        android:layout_marginTop="0dp">
+
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="match_parent"
+            android:text="Price:"
+            android:id="@+id/text_price"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:gravity="start|center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/price"
+            android:textSize="18dp"
+            android:gravity="left|center_vertical"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="80dp"
+        android:id="@+id/lin_description"
+        android:orientation="horizontal"
+        android:layout_below="@id/lin_price"
+        android:layout_margin="16dp"
+        android:layout_marginTop="0dp">
+
+        <TextView
+            android:layout_width="125dp"
+            android:layout_height="match_parent"
+            android:text="Description:"
+            android:id="@+id/text_description"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:gravity="start|center_vertical"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/description"
+            android:textSize="18dp"
+            android:gravity="left|center_vertical"/>
+    </LinearLayout>
+
+</RelativeLayout>

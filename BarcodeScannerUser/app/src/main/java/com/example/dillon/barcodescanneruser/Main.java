@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,40 +33,35 @@ import org.json.JSONObject;
 
 
 public class Main extends ActionBarActivity {
-<<<<<<< HEAD
-    RippleButton scan;
+//    RippleButton scan;
+    ImageButton scan;
     TextView item_code,item_desc,item_price,item_name;
     Toolbar toolbar;
-=======
-    Button scan;
-    TextView code;
-    LinearLayout left, right;
->>>>>>> 1bb2392ce948a16786bf883e644cb54f1219364b
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar=(Toolbar)findViewById(R.id.app_bar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setElevation(6);
-        scan = (RippleButton)findViewById(R.id.btn_scan);
-        item_code = (TextView)findViewById(R.id.item_code);
-        item_name = (TextView)findViewById(R.id.item_name);
-        item_price = (TextView)findViewById(R.id.item_price);
-        item_desc = (TextView)findViewById(R.id.item_description);
 
-<<<<<<< HEAD
-=======
-        scan = (Button)findViewById(R.id.btn_scan);
-        code = (TextView)findViewById(R.id.tv_code);
+        scan = (ImageButton)findViewById(R.id.btn_scan);
 
-        left = (LinearLayout)findViewById(R.id.leftLayout);
-        right = (LinearLayout)findViewById(R.id.rightLayout);
+//        toolbar=(Toolbar)findViewById(R.id.app_bar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setElevation(6);
+//        scan = (RippleButton)findViewById(R.id.btn_scan);
+//        item_code = (TextView)findViewById(R.id.item_code);
+//        item_name = (TextView)findViewById(R.id.item_name);
+//        item_price = (TextView)findViewById(R.id.item_price);
+//        item_desc = (TextView)findViewById(R.id.item_description);
 
-        left.setVisibility(View.GONE);
-        right.setVisibility(View.GONE);
->>>>>>> 1bb2392ce948a16786bf883e644cb54f1219364b
+//        scan = (Button)findViewById(R.id.btn_scan);
+//        code = (TextView)findViewById(R.id.tv_code);
+//
+//        left = (LinearLayout)findViewById(R.id.leftLayout);
+//        right = (LinearLayout)findViewById(R.id.rightLayout);
+//
+//        left.setVisibility(View.GONE);
+//        right.setVisibility(View.GONE);
     }
 
 
@@ -100,65 +96,57 @@ public class Main extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         //retrieve scan result
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        String scanContent="";
-        if (scanningResult != null) {
-            scanContent = scanningResult.getContents();
-            ConnectivityManager check = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-            Boolean connected = false;
-            NetworkInfo networkInfo = check.getActiveNetworkInfo();
-            if (networkInfo != null && networkInfo.isConnected()) {
-                makeRequest(scanContent);
-                connected=true;
-            }
-            if(!connected)
-                Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
-            item_code.setText(scanContent);
+//        String scanContent="";
+        if (scanningResult!=null) {
+            Intent result = new Intent(this, Result.class);
+            result.putExtra("barcode", scanningResult.getContents());
+            startActivity(result);
         }
         else
             Toast.makeText(getApplicationContext(),"No scan data received!", Toast.LENGTH_SHORT).show();
     }
 
-    private void makeRequest(String barcode){
-        String base_url="https://steff-bood-sw-eng.herokuapp.com/getproduct/";
-        String url=base_url+barcode;
-        final ProgressDialog progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("loading...");
-        RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
-        JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET,url,new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                String name,price,unit,quantity;
-                progressDialog.dismiss();
-                Log.e("response",response.toString());
-                if(response.length()!=0){
-                    try {
-                        name = response.getString("name");
-                        price = response.getString("price");
-                        unit = response.getString("unit");
-                        quantity = response.getString("quantity");
-                        item_name.setText(name);
-                        item_price.setText("$" + price);
-                        item_desc.setText(quantity + " " + unit);
-                    }
-                    catch (JSONException e){
-                        e.printStackTrace();
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"No item found",Toast.LENGTH_LONG).show();
-                }
-            }
-        },
-        new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                error.printStackTrace();
-                Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
-            }
-        });
-        requestQueue.add(request);
-        progressDialog.show();
-    }
+//    private void makeRequest(String barcode){
+//        String base_url="https://steff-bood-sw-eng.herokuapp.com/getproduct/";
+//        String url=base_url+barcode;
+//        final ProgressDialog progressDialog=new ProgressDialog(this);
+//        progressDialog.setMessage("loading...");
+//        RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
+//        JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET,url,new Response.Listener<JSONObject>() {
+//            @Override
+//            public void onResponse(JSONObject response) {
+//                String name,price,unit,quantity;
+//                progressDialog.dismiss();
+//                Log.e("response",response.toString());
+//                if(response.length()!=0){
+//                    try {
+//                        name = response.getString("name");
+//                        price = response.getString("price");
+//                        unit = response.getString("unit");
+//                        quantity = response.getString("quantity");
+//                        item_name.setText(name);
+//                        item_price.setText("$" + price);
+//                        item_desc.setText(quantity + " " + unit);
+//                    }
+//                    catch (JSONException e){
+//                        e.printStackTrace();
+//                    }
+//                }
+//                else{
+//                    Toast.makeText(getApplicationContext(),"No item found",Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        },
+//        new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                progressDialog.dismiss();
+//                error.printStackTrace();
+//                Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
+//            }
+//        });
+//        requestQueue.add(request);
+//        progressDialog.show();
+//    }
 
 }
