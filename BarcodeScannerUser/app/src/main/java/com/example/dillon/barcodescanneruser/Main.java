@@ -96,11 +96,17 @@ public class Main extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         //retrieve scan result
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-//        String scanContent="";
+        String scanContent="";
         if (scanningResult!=null) {
-            Intent result = new Intent(this, Result.class);
-            result.putExtra("barcode", scanningResult.getContents());
-            startActivity(result);
+            scanContent = scanningResult.getContents();
+            if (scanContent==null) {
+                Toast.makeText(getApplicationContext(),"Null Barcode", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Intent result = new Intent(this, Result.class);
+                result.putExtra("barcode", scanContent);
+                startActivity(result);
+            }
         }
         else
             Toast.makeText(getApplicationContext(),"No scan data received!", Toast.LENGTH_SHORT).show();

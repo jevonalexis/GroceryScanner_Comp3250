@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +26,7 @@ import org.json.JSONObject;
 
 public class Result extends ActionBarActivity {
     String barcode="";
-    TextView item_code,item_desc,item_price,item_name;
+    TextView item_code,item_desc,item_price,item_name, text_related, txt_name, txt_price, txt_desc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,14 +38,23 @@ public class Result extends ActionBarActivity {
         item_price = (TextView)findViewById(R.id.price);
         item_desc = (TextView)findViewById(R.id.description);
 
+        txt_name = (TextView)findViewById(R.id.text_name);
+        txt_price = (TextView)findViewById(R.id.text_price);
+        txt_desc = (TextView)findViewById(R.id.text_description);
+
+        //Hide the related text field until ready to use
+        text_related = (TextView)findViewById(R.id.related_text);
+        text_related.setVisibility(View.INVISIBLE);
+
+        //get data from previous screen
         Bundle extra = getIntent().getExtras();
         barcode = extra.getString("barcode");
 
+        //get information from server
         if (barcode==null) {
-            Toast.makeText(getApplicationContext(),"The barcode string is null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"The barcode is null", Toast.LENGTH_SHORT).show();
         }
         else {
-//            scanContent = scanningResult.getContents();
             ConnectivityManager check = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
             Boolean connected = false;
             NetworkInfo networkInfo = check.getActiveNetworkInfo();
@@ -56,6 +67,14 @@ public class Result extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
 //            item_code.setText(scanContent);
         }
+
+//        if (realted items found then) {
+//            //handling the listview
+//            text_related.setVisibility(View.VISIBLE);
+//            RelatedAdapter relatedItems = new RelatedAdapter();
+//            ListView listView = (ListView)findViewById(R.id.related);
+//            listView.setAdapter(relatedItems);
+//        }
     }
 
     private void makeRequest(String barcode){
@@ -96,6 +115,13 @@ public class Result extends ActionBarActivity {
                 error.printStackTrace();
                 Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
                 Log.e("ServerError", error.toString());
+                item_name.setVisibility(View.GONE);
+                item_price.setVisibility(View.GONE);
+                item_desc.setVisibility(View.GONE);
+                txt_name.setVisibility(View.GONE);
+                txt_price.setVisibility(View.GONE);
+                txt_desc.setVisibility(View.GONE);
+
             }
         });
         requestQueue.add(request);

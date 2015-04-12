@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">BarcodeScannerUser</string>
+    <string name="app_name">Grocery Scanner</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="scan">Scan Product</string>
-    <string name="title_activity_result">Result</string>
+    <string name="title_activity_result">Product View</string>
 
 </resources>
