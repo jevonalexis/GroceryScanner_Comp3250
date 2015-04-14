@@ -2,14 +2,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.project.t1.barcodescanneradmin.AddItem">
-    <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_ViewDB"
-        android:orderInCategory="200"
-        android:title="View DB"
+        android:orderInCategory="100"
+        android:title="View Database"
         app:showAsAction="never" />
 </menu>

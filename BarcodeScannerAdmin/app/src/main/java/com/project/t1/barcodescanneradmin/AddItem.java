@@ -110,9 +110,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
         if(id==R.id.action_ViewDB){
             startActivity(new Intent(AddItem.this,ViewItems.class));
         }
@@ -125,7 +123,6 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.btn_scan:
-
                 IntentIntegrator scanIntegrator = new IntentIntegrator(AddItem.this);
                 scanIntegrator.initiateScan();
                 break;
@@ -141,7 +138,6 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         int pos=unitsSpinner.getSelectedItemPosition();
-
         String[] units=res.getStringArray(R.array.units);
         i_unit=units[pos];
     }
@@ -219,8 +215,10 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        error.printStackTrace();
-                        Toast.makeText(getApplicationContext(),"Server Error",Toast.LENGTH_SHORT).show();
+                        if(error.getMessage()!=null)
+                            Toast.makeText(getApplicationContext(),"Server Error",Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_SHORT).show();
                     }
                 });
         requestQueue.add(request);

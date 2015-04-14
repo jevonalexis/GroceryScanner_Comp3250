@@ -65,7 +65,7 @@ public class ViewItems extends ActionBarActivity {
                 String type= et_type.getText().toString();
                 if(type.equals(""))
                     type = "all";
-                requestAll(type);
+                requestAll(type.replaceAll(" ","%20"));
             }
         });
         listView.setLongClickable(true);
@@ -179,7 +179,6 @@ public class ViewItems extends ActionBarActivity {
                                 Collections.sort(item_list);
                                 myAdapter = new MyAdapter(getApplicationContext(), item_list);
                                 listView.setAdapter(myAdapter);
-                                //myAdapter.notifyDataSetChanged();
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
