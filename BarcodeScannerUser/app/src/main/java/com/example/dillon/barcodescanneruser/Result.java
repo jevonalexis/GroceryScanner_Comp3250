@@ -35,7 +35,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class Result extends ActionBarActivity {
     private String barcode="";
-    private TextView item_brand,item_desc,item_price,item_name, text_related,txt_brand, txt_name, txt_price, txt_desc;
+    private TextView item_brand,item_desc,item_price,item_type, text_related,txt_brand, txt_type, txt_price, txt_desc;
     private ListView listView;
     private Toolbar toolbar;
     @Override
@@ -47,11 +47,11 @@ public class Result extends ActionBarActivity {
         getSupportActionBar().setElevation(6);
 
         item_brand = (TextView)findViewById(R.id.brand);
-        item_name = (TextView)findViewById(R.id.name);
+        item_type = (TextView)findViewById(R.id.type);
         item_price = (TextView)findViewById(R.id.price);
         item_desc = (TextView)findViewById(R.id.description);
 
-        txt_name = (TextView)findViewById(R.id.text_name);
+        txt_type = (TextView)findViewById(R.id.text_type);
         txt_price = (TextView)findViewById(R.id.text_price);
         txt_desc = (TextView)findViewById(R.id.text_description);
         txt_brand = (TextView) findViewById(R.id.text_brand);
@@ -106,6 +106,7 @@ public class Result extends ActionBarActivity {
         }
     }
 
+
     private void makeRequest(String barcode){
         String base_url="https://steff-bood-sw-eng.herokuapp.com/getproduct/";
         String url=base_url+barcode;
@@ -115,18 +116,18 @@ public class Result extends ActionBarActivity {
         JsonArrayRequest request=new JsonArrayRequest(Request.Method.GET,url,new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                String name,price,unit,quantity,brand;
+                String type,price,unit,quantity,brand;
                 progressDialog.dismiss();
                 Log.e("response", response.toString());
                 if(response.length()>0){
                     try {
-                        JSONObject requested_item = (JSONObject)response.get(1);
-                        name = requested_item.getString("name");
+                        JSONObject requested_item = (JSONObject)response.get(0);
+                        type = requested_item.getString("type");
                         price = requested_item.getString("price");
                         unit = requested_item.getString("unit");
                         brand = requested_item.getString("brand");
                         quantity = requested_item.getString("quantity");
-                        item_name.setText(name);
+                        item_type.setText(type);
                         item_brand.setText(brand);
                         item_price.setText("$" + price);
                         item_desc.setText(quantity + " " + unit);
@@ -136,7 +137,7 @@ public class Result extends ActionBarActivity {
                             ArrayList<ListRow> related_list= new ArrayList<ListRow>();
                             for(int i=1;i<response.length();i++){
                                 JSONObject temp_obj = (JSONObject)response.get(i);
-                                ListRow row = new ListRow(temp_obj.getString("brand"),temp_obj.getString("name"),
+                                ListRow row = new ListRow(temp_obj.getString("brand"),temp_obj.getString("type"),
                                         temp_obj.getString("price"),temp_obj.getString("quantity")+" "+temp_obj.getString("unit"));
                                 related_list.add(row);
                             }
@@ -171,11 +172,11 @@ public class Result extends ActionBarActivity {
                 error.printStackTrace();
                 Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
                 Log.e("ServerError", error.toString());
-                item_name.setVisibility(View.GONE);
+                item_type.setVisibility(View.GONE);
                 item_brand.setVisibility(View.GONE);
                 item_price.setVisibility(View.GONE);
                 item_desc.setVisibility(View.GONE);
-                txt_name.setVisibility(View.GONE);
+                txt_type.setVisibility(View.GONE);
                 txt_price.setVisibility(View.GONE);
                 txt_desc.setVisibility(View.GONE);
                 txt_brand.setVisibility(View.GONE);
@@ -221,7 +222,7 @@ public class Result extends ActionBarActivity {
 
             rbrand.setText(temp.brand);
             rtype.setText(temp.type);
-            rprice.setText(temp.price);
+            rprice.setText("$"+temp.price);
             rdesc.setText(temp.description);
             return convertView;
         }

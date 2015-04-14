@@ -131,34 +131,6 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
                 break;
             case R.id.btn_save:
 
-               /* String i_name=name.getText().toString();
-                String i_code=code.getText().toString();
-                String i_quantity=quantity.getText().toString();
-                String i_price=price.getText().toString();
-                String i_brand=brand.getText().toString();
-                int err=-1;
-                String[] errors={"Item brand and type containing letters must be entered","Barcode must be captured","Price must be entered","Price must be greater than 0"};
-                //check to make sure not empty and contains alphanumeric data
-                Pattern p = Pattern.compile(".*[a-zA-Z0-9].*");
-                Matcher m = p.matcher(i_name);
-                Matcher m2= p.matcher(i_brand);
-
-                if(i_name.length()==0 || !m.find() || i_brand.length()==0 || !m2.find())
-                    err=0;
-                else if(i_code.length()==0 || i_code.equals("Barcode"))
-                    err=1;
-                else if(i_price.length()==0)
-                    err=2;
-                else if(Double.parseDouble(i_price)<=0)
-                    err=3;
-
-                if(err==-1){
-                    //DB.insertRow(DB,i_code,i_name,Double.parseDouble(i_price),i_unit,Double.parseDouble(i_quantity));
-                    Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    Toast.makeText(this,errors[err],Toast.LENGTH_SHORT).show();
-                }*/
                 validateAndSave();
                 break;
         }
