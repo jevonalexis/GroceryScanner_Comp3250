@@ -39,7 +39,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
 
     private Toolbar toolbar;
     RippleButton scan,save;
-    EditText name,quantity,price,brand;
+    EditText type,quantity,price,brand;
     Spinner unitsSpinner;
     TextView code;
     DataBaseOps DB;
@@ -57,7 +57,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
 
         save=(RippleButton) findViewById(R.id.btn_save);
         scan=(RippleButton) findViewById(R.id.btn_scan);
-        name= (EditText)findViewById(R.id.et_itemName);
+        type= (EditText)findViewById(R.id.et_itemType);
         brand = (EditText)findViewById(R.id.et_itemBrand);
         price= (EditText)findViewById(R.id.et_price);
         quantity=(EditText)findViewById(R.id.et_quantity);
@@ -181,7 +181,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
 
     private void validateAndSave(){
         //get info that was entered from views
-        String i_name=name.getText().toString();
+        String i_type=type.getText().toString();
         String i_code=code.getText().toString();
         String i_brand = brand.getText().toString();
         String i_quantity=quantity.getText().toString();
@@ -193,11 +193,11 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
         String[] errors={"Item name containing letters must be entered","Barcode must be captured","Price must be entered","Price must be greater than 0"};
         //check to make sure not empty and contains alphanumeric data
         Pattern p = Pattern.compile(".*[a-zA-Z0-9].*");
-        Matcher m = p.matcher(i_name);
+        Matcher m = p.matcher(i_type);
         Matcher m2 = p.matcher(i_brand);
 
         //validate input and record errors
-        if(i_name.length()==0 || !m.find() || i_brand.length()==0 || !m2.find())
+        if(i_type.length()==0 || !m.find() || i_brand.length()==0 || !m2.find())
             err=0;
         else if(i_code.length()==0 ||i_code.equals("Barcode"))
             err=1;
@@ -209,7 +209,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
         if(err==-1){
             JSONObject obj=new JSONObject();
             try{
-                obj.put("name", i_name);
+                obj.put("type", i_type);
                 obj.put("brand",i_brand);
                 obj.put("price",Double.parseDouble(i_price));
                 if(i_quantity.equals(""))
@@ -224,7 +224,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
             }
             Log.e("json obj", obj.toString());
             sendToServer(obj);
-            if(i_quantity.equals("")) i_quantity="0";
+            //if(i_quantity.equals("")) i_quantity="0";
             //DB.insertRow(DB,i_code,i_name,Double.parseDouble(i_price),i_unit,Double.parseDouble(i_quantity));
             //Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
         }

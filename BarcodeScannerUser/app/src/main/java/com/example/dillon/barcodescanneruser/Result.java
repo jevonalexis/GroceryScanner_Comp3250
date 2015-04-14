@@ -2,15 +2,19 @@ package com.example.dillon.barcodescanneruser;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,15 +23,20 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
+import com.android.volley.toolbox.JsonArrayRequest;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
+import cn.pedant.SweetAlert.SweetAlertDialog;
+
 
 public class Result extends ActionBarActivity {
-    String barcode="";
-    TextView item_brand,item_desc,item_price,item_name, text_related, txt_name, txt_price, txt_desc;
+    private String barcode="";
+    private TextView item_brand,item_desc,item_price,item_name, text_related,txt_brand, txt_name, txt_price, txt_desc;
+    private ListView listView;
     private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,10 +54,15 @@ public class Result extends ActionBarActivity {
         txt_name = (TextView)findViewById(R.id.text_name);
         txt_price = (TextView)findViewById(R.id.text_price);
         txt_desc = (TextView)findViewById(R.id.text_description);
+        txt_brand = (TextView) findViewById(R.id.text_brand);
+
+        listView = (ListView) findViewById(R.id.related);
+
 
         //Hide the related text field until ready to use
         text_related = (TextView)findViewById(R.id.related_text);
         text_related.setVisibility(View.INVISIBLE);
+        listView.setVisibility(View.INVISIBLE);
 
         //get data from previous screen
         Bundle extra = getIntent().getExtras();
@@ -72,13 +86,24 @@ public class Result extends ActionBarActivity {
 //            item_code.setText(scanContent);
         }
 
-//        if (realted items found then) {
-//            //handling the listview
-//            text_related.setVisibility(View.VISIBLE);
-//            RelatedAdapter relatedItems = new RelatedAdapter();
-//            ListView listView = (ListView)findViewById(R.id.related);
-//            listView.setAdapter(relatedItems);
-//        }
+        /*if (realted items found then) {
+            //handling the listview
+            text_related.setVisibility(View.VISIBLE);
+            RelatedAdapter relatedItems = new RelatedAdapter();
+            ListView listView = (ListView)findViewById(R.id.related);
+            listView.setAdapter(relatedItems);
+        }*/
+    }
+
+    private class ListRow{
+        String brand,type,price,description;
+
+        private ListRow(String brand, String type, String price, String description) {
+            this.brand = brand;
+            this.type = type;
+            this.price = price;
+            this.description = description;
+        }
     }
 
     private void makeRequest(String barcode){
@@ -87,30 +112,55 @@ public class Result extends ActionBarActivity {
         final ProgressDialog progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("loading...");
         final RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
-        JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET,url,new Response.Listener<JSONObject>() {
+        JsonArrayRequest request=new JsonArrayRequest(Request.Method.GET,url,new Response.Listener<JSONArray>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONArray response) {
                 String name,price,unit,quantity,brand;
                 progressDialog.dismiss();
                 Log.e("response", response.toString());
-                if(response.length()!=0){
+                if(response.length()>0){
                     try {
-                        name = response.getString("name");
-                        price = response.getString("price");
-                        unit = response.getString("unit");
-                        brand = response.getString("brand");
-                        quantity = response.getString("quantity");
+                        JSONObject requested_item = (JSONObject)response.get(1);
+                        name = requested_item.getString("name");
+                        price = requested_item.getString("price");
+                        unit = requested_item.getString("unit");
+                        brand = requested_item.getString("brand");
+                        quantity = requested_item.getString("quantity");
                         item_name.setText(name);
                         item_brand.setText(brand);
                         item_price.setText("$" + price);
                         item_desc.setText(quantity + " " + unit);
+                        if(response.length()>1){
+                            listView.setVisibility(View.VISIBLE);
+                            text_related.setVisibility(View.VISIBLE);
+                            ArrayList<ListRow> related_list= new ArrayList<ListRow>();
+                            for(int i=1;i<response.length();i++){
+                                JSONObject temp_obj = (JSONObject)response.get(i);
+                                ListRow row = new ListRow(temp_obj.getString("brand"),temp_obj.getString("name"),
+                                        temp_obj.getString("price"),temp_obj.getString("quantity")+" "+temp_obj.getString("unit"));
+                                related_list.add(row);
+                            }
+
+                            MyAdapter myAdapter = new MyAdapter(getApplicationContext(),related_list);
+                            listView.setAdapter(myAdapter);
+                        }
+
                     }
                     catch (JSONException e){
                         e.printStackTrace();
                     }
                 }
                 else{
-                    Toast.makeText(getApplicationContext(),"No item found",Toast.LENGTH_LONG).show();
+                    new SweetAlertDialog(getApplicationContext(),SweetAlertDialog.WARNING_TYPE)
+                            .setTitleText("Item not found")
+                            .setCancelText("Ok")
+                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    startActivity(new Intent(Result.this,Main.class));
+                                }
+                            })
+                            .show();
                 }
             }
         },
@@ -128,13 +178,54 @@ public class Result extends ActionBarActivity {
                 txt_name.setVisibility(View.GONE);
                 txt_price.setVisibility(View.GONE);
                 txt_desc.setVisibility(View.GONE);
-
+                txt_brand.setVisibility(View.GONE);
             }
         });
         requestQueue.add(request);
         progressDialog.show();
     }
 
+
+    class MyAdapter extends BaseAdapter {
+        ArrayList<ListRow> list;
+        Context ctx;
+        MyAdapter(Context context,ArrayList<ListRow> list) { // constructor
+            ctx=context;
+            this.list=list;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return list.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            LayoutInflater inflater= (LayoutInflater) ctx.getSystemService(LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.relatedlayout,parent,false);
+            TextView rbrand=(TextView) convertView.findViewById(R.id.rbrand);
+            TextView rtype=(TextView) convertView.findViewById(R.id.rtype);
+            TextView rprice=(TextView) convertView.findViewById(R.id.rprice);
+            TextView rdesc=(TextView) convertView.findViewById(R.id.rdescription);
+            ListRow temp= list.get(position);
+
+            rbrand.setText(temp.brand);
+            rtype.setText(temp.type);
+            rprice.setText(temp.price);
+            rdesc.setText(temp.description);
+            return convertView;
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

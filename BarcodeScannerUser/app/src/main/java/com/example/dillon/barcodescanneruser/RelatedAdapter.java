@@ -63,7 +63,7 @@ public class RelatedAdapter extends BaseAdapter {
         View view = convertView;
         if (convertView==null) {
             view = inflater.inflate(R.layout.relatedlayout, null);
-            text_name = (TextView)view.findViewById(R.id.rname);
+            text_name = (TextView)view.findViewById(R.id.rtype);
             text_price = (TextView)view.findViewById(R.id.rprice);
 
             //set the textviews to values retrieved from the server
