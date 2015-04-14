@@ -29,11 +29,20 @@
     <EditText
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:id="@+id/et_itemName"
-        android:hint="Item name"
+        android:id="@+id/et_itemBrand"
+        android:hint="Item brand"
         android:layout_margin="16dp"
         android:layout_marginTop="0dp"
         android:layout_below="@+id/btn_scan" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:id="@+id/et_itemName"
+        android:hint="Item type"
+        android:layout_margin="16dp"
+        android:layout_marginTop="0dp"
+        android:layout_below="@+id/et_itemBrand" />
 
     <EditText
         android:layout_width="match_parent"

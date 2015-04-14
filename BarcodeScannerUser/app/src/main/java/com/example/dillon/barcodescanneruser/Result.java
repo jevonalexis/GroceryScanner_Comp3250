@@ -86,11 +86,11 @@ public class Result extends ActionBarActivity {
         String url=base_url+barcode;
         final ProgressDialog progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("loading...");
-        RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
+        final RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
         JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET,url,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                String name,price,unit,quantity;
+                String name,price,unit,quantity,brand;
                 progressDialog.dismiss();
                 Log.e("response", response.toString());
                 if(response.length()!=0){
@@ -98,8 +98,10 @@ public class Result extends ActionBarActivity {
                         name = response.getString("name");
                         price = response.getString("price");
                         unit = response.getString("unit");
+                        brand = response.getString("brand");
                         quantity = response.getString("quantity");
                         item_name.setText(name);
+                        item_brand.setText(brand);
                         item_price.setText("$" + price);
                         item_desc.setText(quantity + " " + unit);
                     }
@@ -120,6 +122,7 @@ public class Result extends ActionBarActivity {
                 Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
                 Log.e("ServerError", error.toString());
                 item_name.setVisibility(View.GONE);
+                item_brand.setVisibility(View.GONE);
                 item_price.setVisibility(View.GONE);
                 item_desc.setVisibility(View.GONE);
                 txt_name.setVisibility(View.GONE);

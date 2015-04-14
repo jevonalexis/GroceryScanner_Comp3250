@@ -45,9 +45,9 @@ public class Main extends ActionBarActivity {
 
         scan = (ImageButton)findViewById(R.id.btn_scan);
 
-//        toolbar=(Toolbar)findViewById(R.id.app_bar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setElevation(6);
+        toolbar=(Toolbar)findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(6);
 //        scan = (RippleButton)findViewById(R.id.btn_scan);
 //        item_code = (TextView)findViewById(R.id.item_code);
 //        item_name = (TextView)findViewById(R.id.item_name);

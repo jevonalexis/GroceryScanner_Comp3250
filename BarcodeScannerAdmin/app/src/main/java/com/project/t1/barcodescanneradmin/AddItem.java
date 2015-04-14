@@ -7,6 +7,7 @@ import android.support.annotation.ColorRes;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +19,17 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.xgc1986.ripplebutton.widget.RippleButton;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import ZXing.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,7 +39,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
 
     private Toolbar toolbar;
     RippleButton scan,save;
-    EditText name,quantity,price;
+    EditText name,quantity,price,brand;
     Spinner unitsSpinner;
     TextView code;
     DataBaseOps DB;
@@ -47,6 +58,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
         save=(RippleButton) findViewById(R.id.btn_save);
         scan=(RippleButton) findViewById(R.id.btn_scan);
         name= (EditText)findViewById(R.id.et_itemName);
+        brand = (EditText)findViewById(R.id.et_itemBrand);
         price= (EditText)findViewById(R.id.et_price);
         quantity=(EditText)findViewById(R.id.et_quantity);
         unitsSpinner=(Spinner) findViewById(R.id.spin_unit);
@@ -119,19 +131,21 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
                 break;
             case R.id.btn_save:
 
-                String i_name=name.getText().toString();
+               /* String i_name=name.getText().toString();
                 String i_code=code.getText().toString();
                 String i_quantity=quantity.getText().toString();
                 String i_price=price.getText().toString();
+                String i_brand=brand.getText().toString();
                 int err=-1;
-                String[] errors={"Item name containing letters must be entered","Barcode must be captured","Price must be entered","Price must be greater than 0"};
+                String[] errors={"Item brand and type containing letters must be entered","Barcode must be captured","Price must be entered","Price must be greater than 0"};
                 //check to make sure not empty and contains alphanumeric data
                 Pattern p = Pattern.compile(".*[a-zA-Z0-9].*");
                 Matcher m = p.matcher(i_name);
+                Matcher m2= p.matcher(i_brand);
 
-                if(i_name.length()==0 || !m.find())
+                if(i_name.length()==0 || !m.find() || i_brand.length()==0 || !m2.find())
                     err=0;
-                else if(i_code.length()==0 || i_code==null ||i_code.equals("Barcode"))
+                else if(i_code.length()==0 || i_code.equals("Barcode"))
                     err=1;
                 else if(i_price.length()==0)
                     err=2;
@@ -139,13 +153,13 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
                     err=3;
 
                 if(err==-1){
-                    DB.insertRow(DB,i_code,i_name,Double.parseDouble(i_price),i_unit,Double.parseDouble(i_quantity));
+                    //DB.insertRow(DB,i_code,i_name,Double.parseDouble(i_price),i_unit,Double.parseDouble(i_quantity));
                     Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(this,errors[err],Toast.LENGTH_SHORT).show();
-                }
-
+                }*/
+                validateAndSave();
                 break;
         }
 
@@ -163,5 +177,80 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    private void validateAndSave(){
+        //get info that was entered from views
+        String i_name=name.getText().toString();
+        String i_code=code.getText().toString();
+        String i_brand = brand.getText().toString();
+        String i_quantity=quantity.getText().toString();
+        if(i_quantity.equals("Quantity")) i_quantity="";
+        String i_price=price.getText().toString();
+
+        int err=-1;
+        //array containing error messages that would displayed if input is invalid
+        String[] errors={"Item name containing letters must be entered","Barcode must be captured","Price must be entered","Price must be greater than 0"};
+        //check to make sure not empty and contains alphanumeric data
+        Pattern p = Pattern.compile(".*[a-zA-Z0-9].*");
+        Matcher m = p.matcher(i_name);
+        Matcher m2 = p.matcher(i_brand);
+
+        //validate input and record errors
+        if(i_name.length()==0 || !m.find() || i_brand.length()==0 || !m2.find())
+            err=0;
+        else if(i_code.length()==0 ||i_code.equals("Barcode"))
+            err=1;
+        else if(i_price.length()==0)
+            err=2;
+        else if(Double.parseDouble(i_price)<=0)
+            err=3;
+        //if no errors then it is safe to send to server
+        if(err==-1){
+            JSONObject obj=new JSONObject();
+            try{
+                obj.put("name", i_name);
+                obj.put("brand",i_brand);
+                obj.put("price",Double.parseDouble(i_price));
+                if(i_quantity.equals(""))
+                    obj.put("quantity",0.0);
+                else
+                    obj.put("quantity",Double.parseDouble(i_quantity));
+                obj.put("unit",i_unit);
+                obj.put("code",Long.parseLong(i_code));
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+            }
+            Log.e("json obj", obj.toString());
+            sendToServer(obj);
+            if(i_quantity.equals("")) i_quantity="0";
+            //DB.insertRow(DB,i_code,i_name,Double.parseDouble(i_price),i_unit,Double.parseDouble(i_quantity));
+            //Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
+        }
+        //if error was found notify user
+        else{
+            Toast.makeText(this,errors[err],Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendToServer(JSONObject obj){
+        RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
+        String url="https://steff-bood-sw-eng.herokuapp.com/newproduct";
+        JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST,url,obj,new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_SHORT).show();
+                //Log.e("response",response.toString());
+            }
+        },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                        Toast.makeText(getApplicationContext(),"Server Error",Toast.LENGTH_SHORT).show();
+                    }
+                });
+        requestQueue.add(request);
     }
 }
