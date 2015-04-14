@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,14 +27,17 @@ import org.json.JSONObject;
 
 public class Result extends ActionBarActivity {
     String barcode="";
-    TextView item_code,item_desc,item_price,item_name, text_related, txt_name, txt_price, txt_desc;
-
+    TextView item_brand,item_desc,item_price,item_name, text_related, txt_name, txt_price, txt_desc;
+    private Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+        toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(6);
 
-        item_code = (TextView)findViewById(R.id.code);
+        item_brand = (TextView)findViewById(R.id.brand);
         item_name = (TextView)findViewById(R.id.name);
         item_price = (TextView)findViewById(R.id.price);
         item_desc = (TextView)findViewById(R.id.description);
@@ -59,7 +63,7 @@ public class Result extends ActionBarActivity {
             Boolean connected = false;
             NetworkInfo networkInfo = check.getActiveNetworkInfo();
             if (networkInfo != null && networkInfo.isConnected()) {
-                item_code.setText(barcode);
+               // item_brand.setText(barcode);
                 makeRequest(barcode);
                 connected=true;
             }
