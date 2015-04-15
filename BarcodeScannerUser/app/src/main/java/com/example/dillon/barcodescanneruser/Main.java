@@ -95,48 +95,6 @@ public class Main extends ActionBarActivity {
         else
             Toast.makeText(getApplicationContext(),"No scan data received!", Toast.LENGTH_SHORT).show();
     }
-/*
-    private void makeRequest(String barcode){
-        String base_url="https://steff-bood-sw-eng.herokuapp.com/getproduct/";
-        String url=base_url+barcode;
-        final ProgressDialog progressDialog=new ProgressDialog(this);
-        progressDialog.setMessage("loading...");
-        RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
-        JsonObjectRequest request=new JsonObjectRequest(Request.Method.GET,url,new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                String name,price,unit,quantity;
-                progressDialog.dismiss();
-                Log.e("response",response.toString());
-                if(response.length()!=0){
-                    try {
-                        name = response.getString("name");
-                        price = response.getString("price");
-                        unit = response.getString("unit");
-                        quantity = response.getString("quantity");
-                        item_name.setText(name);
-                        item_price.setText("$" + price);
-                        item_desc.setText(quantity + " " + unit);
-                    }
-                    catch (JSONException e){
-                        e.printStackTrace();
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"No item found",Toast.LENGTH_LONG).show();
-                }
-            }
-        },
-        new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                progressDialog.dismiss();
-                error.printStackTrace();
-                Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
-            }
-        });
-        requestQueue.add(request);
-        progressDialog.show();
-    }*/
+
 
 }

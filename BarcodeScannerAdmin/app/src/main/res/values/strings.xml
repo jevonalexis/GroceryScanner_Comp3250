@@ -2,7 +2,6 @@
     <string name="app_name">BarcodeScanner Admin</string>
     <string name="title_activity_add_item">AddItem</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
     <string-array name="units">
@@ -17,4 +16,5 @@
         <item name="NA">N/A</item>
     </string-array>
     <string name="title_activity_view_items">ViewItems</string>
+    <string name="title_activity_login">Login</string>
 </resources>

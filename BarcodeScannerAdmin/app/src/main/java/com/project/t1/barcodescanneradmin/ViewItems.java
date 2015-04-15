@@ -3,6 +3,8 @@ package com.project.t1.barcodescanneradmin;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -65,7 +67,8 @@ public class ViewItems extends ActionBarActivity {
                 String type= et_type.getText().toString();
                 if(type.equals(""))
                     type = "all";
-                requestAll(type.replaceAll(" ","%20"));
+                if(isConnected())
+                    requestAll(type.replaceAll(" ","%20"));
             }
         });
         listView.setLongClickable(true);
@@ -82,9 +85,12 @@ public class ViewItems extends ActionBarActivity {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
                                 sDialog.dismissWithAnimation();
-                                deleteReq(selectedItem.barcode);
-                                item_list.remove(pos);
-                                myAdapter.notifyDataSetChanged();
+                                if(isConnected()){
+                                    deleteReq(selectedItem.barcode);
+                                    item_list.remove(pos);
+                                    myAdapter.notifyDataSetChanged();
+                                }
+
                             }
                         })
                         .show();
@@ -93,6 +99,18 @@ public class ViewItems extends ActionBarActivity {
         });
     }
 
+    private boolean isConnected(){
+        ConnectivityManager check = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        Boolean connected = false;
+        NetworkInfo networkInfo = check.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            // item_brand.setText(barcode);
+            connected=true;
+        }
+        if(!connected)
+            Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+        return connected;
+    }
 
   /*  class myAdapter extends BaseAdapter {
 

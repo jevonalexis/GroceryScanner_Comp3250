@@ -29,11 +29,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 
 public class Result extends ActionBarActivity {
+    Context ctx= this;
     private String barcode="";
     private TextView item_brand,item_desc,item_price,item_type, text_related,txt_brand, txt_type, txt_price, txt_desc;
     private ListView listView;
@@ -57,7 +59,6 @@ public class Result extends ActionBarActivity {
         txt_brand = (TextView) findViewById(R.id.text_brand);
 
         listView = (ListView) findViewById(R.id.related);
-
 
         //Hide the related text field until ready to use
         text_related = (TextView)findViewById(R.id.related_text);
@@ -95,7 +96,7 @@ public class Result extends ActionBarActivity {
         }*/
     }
 
-    private class ListRow{
+    private class ListRow implements Comparable<ListRow>{
         String brand,type,price,description;
 
         private ListRow(String brand, String type, String price, String description) {
@@ -103,6 +104,11 @@ public class Result extends ActionBarActivity {
             this.type = type;
             this.price = price;
             this.description = description;
+        }
+
+        @Override
+        public int compareTo(ListRow another) {
+            return Double.parseDouble(this.price) <= Double.parseDouble(another.price)?-1:1;
         }
     }
 
@@ -141,7 +147,7 @@ public class Result extends ActionBarActivity {
                                         temp_obj.getString("price"),temp_obj.getString("quantity")+" "+temp_obj.getString("unit"));
                                 related_list.add(row);
                             }
-
+                            Collections.sort(related_list);
                             MyAdapter myAdapter = new MyAdapter(getApplicationContext(),related_list);
                             listView.setAdapter(myAdapter);
                         }
@@ -152,16 +158,18 @@ public class Result extends ActionBarActivity {
                     }
                 }
                 else{
-                    new SweetAlertDialog(getApplicationContext(),SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Item not found")
-                            .setCancelText("Ok")
-                            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog sweetAlertDialog) {
-                                    startActivity(new Intent(Result.this,Main.class));
-                                }
-                            })
-                            .show();
+                    SweetAlertDialog sd =new SweetAlertDialog(ctx,SweetAlertDialog.ERROR_TYPE);
+                    sd.setTitleText("Item not found");
+                    sd.setConfirmText("Ok");
+                    sd.setCancelable(false);
+                    sd.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sweetAlertDialog) {
+                            startActivity(new Intent(Result.this,Main.class));
+                        }
+                    });
+                    sd.showCancelButton(false);
+                    sd.show();
                 }
             }
         },
@@ -170,8 +178,24 @@ public class Result extends ActionBarActivity {
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
                 error.printStackTrace();
-                Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
-                Log.e("ServerError", error.toString());
+                if(error.getMessage()!= null){
+                    Log.e("ServerError", error.getMessage());
+                    Toast.makeText(getApplicationContext(),"Sever Error",Toast.LENGTH_LONG).show();
+                }
+                else{
+                    SweetAlertDialog sd =new SweetAlertDialog(ctx,SweetAlertDialog.ERROR_TYPE);
+                            sd.setTitleText("Item not found");
+                            sd.setConfirmText("Ok");
+                            sd.setCancelable(false);
+                            sd.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                @Override
+                                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                    startActivity(new Intent(Result.this,Main.class));
+                                }
+                            });
+                            sd.showCancelButton(false);
+                            sd.show();
+                }
                 item_type.setVisibility(View.GONE);
                 item_brand.setVisibility(View.GONE);
                 item_price.setVisibility(View.GONE);

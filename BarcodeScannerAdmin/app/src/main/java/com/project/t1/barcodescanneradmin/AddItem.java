@@ -3,6 +3,8 @@ package com.project.t1.barcodescanneradmin;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.ColorRes;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -47,7 +49,6 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
     Resources res;
     String i_unit;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,28 +71,6 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
         DB=new DataBaseOps(ctx);
     }
 
-    private void spinnerFn(){
-        res=getResources();
-        String[] units=res.getStringArray(R.array.units);
-        unitsSpinner.setPrompt("Select a unit");
-        ArrayAdapter<String> adapter_units=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,units);
-        unitsSpinner.setAdapter(adapter_units);
-        unitsSpinner.setOnItemSelectedListener(this);
-    }
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        //retrieve scan result
-        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
-        String scanContent="";
-        if (scanningResult != null) {
-            scanContent = scanningResult.getContents();
-            code.setText(scanContent);
-        }
-        else{
-            Toast toast = Toast.makeText(getApplicationContext(),
-                    "No scan data received!", Toast.LENGTH_SHORT);
-            toast.show();
-        }
-    }
 
 
 
@@ -131,8 +110,6 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
                 validateAndSave();
                 break;
         }
-
-
     }
 
     @Override
@@ -146,6 +123,32 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+    private void spinnerFn(){
+        res=getResources();
+        String[] units=res.getStringArray(R.array.units);
+        unitsSpinner.setPrompt("Select a unit");
+        ArrayAdapter<String> adapter_units=new ArrayAdapter<String>(this,android.R.layout.simple_list_item_activated_1,units);
+        unitsSpinner.setAdapter(adapter_units);
+        unitsSpinner.setOnItemSelectedListener(this);
+    }
+
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        //retrieve scan result
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        String scanContent="";
+        if (scanningResult != null) {
+            scanContent = scanningResult.getContents();
+            code.setText(scanContent);
+        }
+        else{
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "No scan data received!", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
 
     private void validateAndSave(){
         //get info that was entered from views
@@ -191,16 +194,23 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
                 e.printStackTrace();
             }
             Log.e("json obj", obj.toString());
-            sendToServer(obj);
-            //if(i_quantity.equals("")) i_quantity="0";
-            //DB.insertRow(DB,i_code,i_name,Double.parseDouble(i_price),i_unit,Double.parseDouble(i_quantity));
-            //Toast.makeText(this,"Saved",Toast.LENGTH_SHORT).show();
+
+            ConnectivityManager check = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+            Boolean connected = false;
+            NetworkInfo networkInfo = check.getActiveNetworkInfo();
+            if (networkInfo != null && networkInfo.isConnected()) {
+                sendToServer(obj);
+                connected=true;
+            }
+            if(!connected)
+                Toast.makeText(getApplicationContext(), "No Internet Connection", Toast.LENGTH_SHORT).show();
+
         }
-        //if error was found notify user
         else{
             Toast.makeText(this,errors[err],Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void sendToServer(JSONObject obj){
         RequestQueue requestQueue=VolleySingleton.getInstance().getRequestQueue();
@@ -208,8 +218,16 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
         JsonObjectRequest request=new JsonObjectRequest(Request.Method.POST,url,obj,new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_SHORT).show();
-                //Log.e("response",response.toString());
+                try{
+                    String status = response.getString("status");
+                    if(status.equals("success")) {
+                        Toast.makeText(getApplicationContext(), "Saved Successfully", Toast.LENGTH_SHORT).show();
+                        resetViews();
+                    }
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                }
             }
         },
                 new Response.ErrorListener() {
@@ -217,10 +235,21 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
                     public void onErrorResponse(VolleyError error) {
                         if(error.getMessage()!=null)
                             Toast.makeText(getApplicationContext(),"Server Error",Toast.LENGTH_SHORT).show();
-                        else
+                        else{
                             Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_SHORT).show();
+                            resetViews();
+                        }
+
                     }
                 });
         requestQueue.add(request);
+    }
+
+    private void resetViews(){
+        type.setText("");
+        quantity.setText("");
+        price.setText("");
+        brand.setText("");
+        code.setText("");
     }
 }
