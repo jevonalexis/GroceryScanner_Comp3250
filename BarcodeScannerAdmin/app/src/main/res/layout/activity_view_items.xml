@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="16dp"
@@ -40,13 +41,17 @@
                 android:layout_weight="3"
                 android:id="@+id/et_type_search"
                 android:hint="item type"/>
-            <Button
+
+            <com.xgc1986.ripplebutton.widget.RippleButton
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="#FFFFFF"
-                android:id="@+id/btn_search"
+                android:textColor="@android:color/white"
+                app:buttonColor="@color/colorAccent"
+                app:rippleColor="@android:color/white"
+                android:id="@+id/btn_srch"
                 android:text="Search"/>
+
             </LinearLayout>
 
     </LinearLayout>

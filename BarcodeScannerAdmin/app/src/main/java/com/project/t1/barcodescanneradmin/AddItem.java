@@ -55,6 +55,7 @@ public class AddItem extends ActionBarActivity implements View.OnClickListener, 
         setContentView(R.layout.activity_add_item);
         toolbar=(Toolbar)findViewById(R.id.app_bar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setElevation(6);
 
         save=(RippleButton) findViewById(R.id.btn_save);
         scan=(RippleButton) findViewById(R.id.btn_scan);

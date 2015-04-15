@@ -28,6 +28,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.xgc1986.ripplebutton.widget.RippleButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,7 +42,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class ViewItems extends ActionBarActivity {
     Toolbar toolbar;
-    Button btn_search;
+    RippleButton btn_search;
     ListView listView;
     EditText et_type;
     Context ctx=this;
@@ -60,7 +61,7 @@ public class ViewItems extends ActionBarActivity {
         queue = VolleySingleton.getInstance().getRequestQueue();
         et_type = (EditText) findViewById(R.id.et_type_search);
         listView=(ListView) findViewById(R.id.listView);
-        btn_search= (Button) findViewById(R.id.btn_search);
+        btn_search= (RippleButton) findViewById(R.id.btn_srch);
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +86,7 @@ public class ViewItems extends ActionBarActivity {
                             @Override
                             public void onClick(SweetAlertDialog sDialog) {
                                 sDialog.dismissWithAnimation();
-                                if(isConnected()){
+                                if (isConnected()) {
                                     deleteReq(selectedItem.barcode);
                                     item_list.remove(pos);
                                     myAdapter.notifyDataSetChanged();
